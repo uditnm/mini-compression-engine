@@ -10,7 +10,7 @@ A lightweight project exploring lossless data compression techniques on real fil
 
 
 
-#### Run-Length Encoding (RLE)
+### Run-Length Encoding (RLE)
 
 
 
@@ -18,7 +18,7 @@ Run-Length Encoding (RLE) is a lossless compression algorithm that reduces data 
 
 
 
-##### Example:
+#### Example:
 
 AAAAA → A × 5
 
@@ -30,7 +30,7 @@ Binary representation:
 
 
 
-##### Results
+#### Results
 
 Real-world text (Frankenstein e-book)
 
