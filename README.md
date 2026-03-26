@@ -72,17 +72,19 @@ The long runs were efficiently encoded
 
 
 
-compress rle <input> <output>
-
-decompress rle <input> <output>
+```bash
+compress rle [input-file] [output-file]
+decompress rle [input-file] [output-file]
+```
 
 
 
 Example for RLE:
 
-dotnet run compress rle OnlyA.txt OnlyA\_compressed.rle
-
-dotnet run decompress rle OnlyA\_compressed.rle OnlyA\_decompressed.txt
+```bash
+dotnet run compress rle OnlyA.txt OnlyA_compressed.rle
+dotnet run decompress rle OnlyA_compressed.rle OnlyA_decompressed.txt
+```
 
 
 
