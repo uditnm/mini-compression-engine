@@ -6,7 +6,7 @@ A lightweight project exploring lossless data compression techniques on real fil
 
 
 
-### Implemented Algorithms
+## Implemented Algorithms
 
 
 
@@ -68,7 +68,7 @@ The long runs were efficiently encoded
 
 
 
-### Usage
+## Usage
 
 
 
