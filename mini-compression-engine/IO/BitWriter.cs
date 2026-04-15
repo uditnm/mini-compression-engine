@@ -8,35 +8,50 @@ namespace mini_compression_engine.IO;
 
 public class BitWriter
 {
-    public byte CurrentByte = 0;
-    public List<byte> ByteData { get; set; } = new();
-    int BitCount = 0;
+    private byte CurrentByte = 0;
+    private List<byte> ByteData { get; set; } = new();
+    int CurrentBitCount = 0;
+
     public void Write(bool bitToUse)
     {
         byte bit = Convert.ToByte(bitToUse);
         CurrentByte = (byte)(CurrentByte << 1);
         CurrentByte = (byte)(CurrentByte | bit);
-        BitCount++;
+        CurrentBitCount++;
 
-        if (BitCount == 8)
+        if (CurrentBitCount == 8)
         {
             ByteData.Add(CurrentByte);
-            BitCount = 0;
+            CurrentBitCount = 0;
             CurrentByte = 0;
+        }
+    }
+
+    public void Write(List<bool> bits)
+    {
+        foreach (bool bit in bits)
+        {
+            Write(bit);
         }
     }
 
     public void Flush()
     {
-        if (BitCount == 0)
+        if (CurrentBitCount == 0)
         {
             return;
         }
 
-        CurrentByte = (byte)(CurrentByte << (8 - BitCount));
+        CurrentByte = (byte)(CurrentByte << (8 - CurrentBitCount));
         ByteData.Add(CurrentByte);
 
-        BitCount = 0;
+        CurrentBitCount = 0;
         CurrentByte = 0;
+    }
+
+    public byte[] ToArray()
+    {
+        Flush();
+        return ByteData.ToArray();
     }
 }
