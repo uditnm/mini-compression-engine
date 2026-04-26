@@ -33,9 +33,14 @@ public class BitReader
             var bit = (data >> (CurrentBitIndex - 1)) & 1;
             CurrentBitIndex--;
             BitsRead++;
-            return Convert.ToBoolean(bit);
+            return bit == 1;
         }
 
         throw new InvalidOperationException("No more data to read.");
+    }
+
+    public bool HasBitsToRead()
+    {
+        return BitCount > 0 && BitsRead < BitCount;
     }
 }

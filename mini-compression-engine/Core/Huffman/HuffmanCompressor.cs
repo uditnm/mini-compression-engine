@@ -13,27 +13,7 @@ public class HuffmanCompressor : ICompressor
         }
 
         var frequencyTable = GetFrequency(input);
-        var minHeap = new PriorityQueue<HuffmanNode, int>();
-        foreach (var frequency in frequencyTable)
-        {
-            minHeap.Enqueue(new HuffmanNode { Value = frequency.Key, Frequency = frequency.Value }, frequency.Value);
-        }
-
-        //build huffman tree
-        while(minHeap.Count > 1)
-        {
-            var smallest = minHeap.Dequeue();
-            var secondSmallest = minHeap.Dequeue();
-
-            var newNode = new HuffmanNode
-            {
-                Frequency = smallest.Frequency + secondSmallest.Frequency,
-                Left = smallest,
-                Right = secondSmallest
-            };
-
-            minHeap.Enqueue(newNode, newNode.Frequency);
-        }
+        var minHeap = BuildHuffmanTree(frequencyTable);
 
         var headNode = minHeap.Dequeue();
 
@@ -69,6 +49,90 @@ public class HuffmanCompressor : ICompressor
         finalOutput.AddRange(compressedBytes);
 
         return finalOutput.ToArray();
+    }
+
+    public byte[] Decompress(byte[] input)
+    {
+        var symbolCount = BitConverter.ToInt32(input, 0);   //4 bytes
+
+        var freqTablestart = 4;
+        var freqTableEnd = freqTablestart + symbolCount * 5;
+
+        var freqTable = new Dictionary<byte, int>();
+        for (int i = 4; i < freqTableEnd; i += 5)
+        {
+            var key = input[i];
+            var val = BitConverter.ToInt32(input, i + 1);
+            freqTable[key] = val;
+        }
+
+        var bitCount = BitConverter.ToInt32(input, freqTableEnd);
+
+        var compressedDataStart = freqTableEnd + 4;
+
+        var minHeap = BuildHuffmanTree(freqTable);
+
+        var headNode = minHeap.Dequeue();
+        var ans = new List<byte>();
+
+        if (headNode.Left == null && headNode.Right == null)
+        {
+            for (int i = 0; i < headNode.Frequency; i++)
+            {
+                ans.Add(headNode.Value.GetValueOrDefault());
+            }
+            return ans.ToArray();
+        }
+
+        var cur = headNode;
+
+        var reader = new BitReader(input[compressedDataStart..], bitCount);
+        while (reader.HasBitsToRead())
+        {
+            var bit = reader.Read();
+            if (bit)
+            {
+                cur = cur.Right;
+            }
+            else
+            {
+                cur = cur.Left;
+            }
+
+            if (cur.Left == null && cur.Right == null)
+            {
+                ans.Add(cur.Value.GetValueOrDefault());
+                cur = headNode;
+            }
+        }
+
+        return ans.ToArray();
+    }
+
+    private static PriorityQueue<HuffmanNode, int> BuildHuffmanTree(Dictionary<byte, int> frequencyTable)
+    {
+        var minHeap = new PriorityQueue<HuffmanNode, int>();
+        foreach (var frequency in frequencyTable)
+        {
+            minHeap.Enqueue(new HuffmanNode { Value = frequency.Key, Frequency = frequency.Value }, frequency.Value);
+        }
+        //build huffman tree
+        while (minHeap.Count > 1)
+        {
+            var smallest = minHeap.Dequeue();
+            var secondSmallest = minHeap.Dequeue();
+
+            var newNode = new HuffmanNode
+            {
+                Frequency = smallest.Frequency + secondSmallest.Frequency,
+                Left = smallest,
+                Right = secondSmallest
+            };
+
+            minHeap.Enqueue(newNode, newNode.Frequency);
+        }
+
+        return minHeap;
     }
 
     private Dictionary<byte, List<bool>> GenerateCodes(HuffmanNode headNode)
@@ -113,10 +177,5 @@ public class HuffmanCompressor : ICompressor
             frequency[item] = frequency.GetValueOrDefault(item) + 1;
         }
         return frequency;
-    }
-
-    public byte[] Decompress(byte[] input)
-    {
-        throw new NotImplementedException();
     }
 }
