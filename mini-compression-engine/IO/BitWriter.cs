@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace mini_compression_engine.IO;
+﻿namespace mini_compression_engine.IO;
 
 public class BitWriter
 {

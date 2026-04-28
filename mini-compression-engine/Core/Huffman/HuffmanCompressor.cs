@@ -44,7 +44,12 @@ public class HuffmanCompressor : ICompressor
         //store bitCount
         metaData.AddRange(BitConverter.GetBytes(bitCount));
 
+        Console.WriteLine($"Metadata: {metaData.Count} bytes");
+
         var compressedBytes = writer.ToArray();
+
+        Console.WriteLine($"Encoded data: {compressedBytes.Length} bytes");
+
         var finalOutput = new List<byte>(metaData);
         finalOutput.AddRange(compressedBytes);
 

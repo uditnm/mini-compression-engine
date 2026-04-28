@@ -1,4 +1,5 @@
-﻿using mini_compression_engine.Core.Interfaces;
+﻿using mini_compression_engine.Core.Huffman;
+using mini_compression_engine.Core.Interfaces;
 using mini_compression_engine.Core.RLE;
 using mini_compression_engine.IO;
 
@@ -13,7 +14,7 @@ class Program
         }
 
         string command = args[0].ToLower();     // compress / decompress
-        string algorithm = args[1].ToLower();   // rle
+        string algorithm = args[1].ToLower();   // rle / huffman
         string inputPath = args[2];
         string outputPath = args.Length > 3 ? args[3] : GetDefaultOutput(command, inputPath);
 
@@ -72,6 +73,7 @@ class Program
         return algorithm switch
         {
             "rle" => new RLECompressor(),
+            "huffman" => new HuffmanCompressor(),
             _ => throw new ArgumentException($"Unknown algorithm: {algorithm}")
         };
     }
@@ -88,6 +90,8 @@ class Program
         Console.WriteLine("Usage:");
         Console.WriteLine("  compress <algorithm> <input> [output]");
         Console.WriteLine("  decompress <algorithm> <input> [output]");
+        Console.WriteLine();
+        Console.WriteLine("Supported algorithms: \n1. rle \n2. huffman");
         Console.WriteLine();
         Console.WriteLine("Example:");
         Console.WriteLine("  compress rle input.txt output.rle");
