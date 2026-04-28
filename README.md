@@ -39,24 +39,26 @@ Binary representation:
 
 #### Results
 
-Real-world text (Frankenstein e-book)
+#### Real-world text (Frankenstein e-book)
 
+```text
 Original:   448,888 bytes
 Compressed: 882,666 bytes
 Ratio:      196.63%
-
+```
 
 
 Increased size due to low repetition as most characters were encoded as \[value,1]
 
 
 
-Best case (10MB of 'A')
+#### Best case (10MB of 'A')
 
+```text
 Original:   10,485,760 bytes
 Compressed:     82,242 bytes
 Ratio:          0.78%
-
+```
 
 
 \~128× compression
@@ -87,6 +89,7 @@ Huffman coding is a popular algorithm used for lossless data compression. The ba
 
 Suppose we build the Huffman Tree for “hello”:
 
+```text
 Input frequencies:
 l:2 h:1 e:1 o:1
 
@@ -95,13 +98,14 @@ l -> 0
 h -> 10
 e -> 110
 o -> 111
-
+```
 
 
 #### Results
 
-Real-world text (Frankenstein e-book)
+#### Real-world text (Frankenstein e-book)
 
+```text
 Original size:     448,888 bytes
 Ratio:          56.78%
 
@@ -110,12 +114,13 @@ Metadata overhead:     508 bytes
 
 Compressed size:   254,892 bytes
 Reduction: 43.22%
+```
 
 
 
+#### Repeated symbol (10MB of 'A')
 
-Repeated symbol (10MB of 'A')
-
+```text
 Original size:   10,485,760 bytes
 Ratio:          12.50%
 
@@ -124,7 +129,7 @@ Metadata overhead:     13 bytes
 
 Compressed size:   1,310,733 bytes
 Reduction: 87.50%
-
+```
 
 
 ## Metadata Overhead
